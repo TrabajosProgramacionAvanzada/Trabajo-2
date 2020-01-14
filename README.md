@@ -70,28 +70,43 @@ Conclusiones obtenida de los análisis de tiempos.
 
 # 4. Evaluación
 La nota del laboratorio se calculará según la ponderación siguiente:
+
 Algoritmos [25 %]:
+
 El informe detalla las eleciones que se utilizaron durante la implementación.
+
 Análisis [15 %]:
+
 El análisis estadístico es correcto y completo.
+
 Informe [10 %]:
+
 El informe está escrito en lenguaje apropiado, sin faltas de ortografía o gramáatica..
+
 Implementación [20 %]
+
 El programa está escrito de forma que puede ser leído y/o re-utilizado fácilmente por otros
 programadores: la redacción es limpia (con espacios y divisiones claras) y bien documentada,
 las sub-funciones y las variables tienen nombres naturales (que indican a que sirven) o
 van acompa~nadas de comentarios aclarando a que sirven.
 Se libera el espacio antes de cerrar las funciones.
 Todos los algoritmos dan resultados correcto.
+
 Eficiencia [30 %]
+
 Los tiempos de calculo de ordenamiento comparados con una implementación básica" (que
 satisface lo solicitado).
 
 # Rangos de notas:
 
  1: no ordena correctamente.
- 1.1{2.4: más de 20 veces más lenta
- 2.5{3.9: 5 a 20 veces más lenta
- 4{5.4: 2 a 5 veces más lenta
- 5.5{6.9: a lo más 2 veces más lenta
+
+ 1.1 - 2.4: más de 20 veces más lenta
+
+ 2.5 - 3.9: 5 a 20 veces más lenta
+
+ 4 - 5.4: 2 a 5 veces más lenta
+
+ 5.5 - 6.9: a lo más 2 veces más lenta
+
  7: tiempos parecidos o mejores
