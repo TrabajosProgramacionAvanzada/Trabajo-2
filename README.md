@@ -1,14 +1,14 @@
 # Trabajo-2
 Bosquedas y ordenamiento
 
-# UNIVERSIDAD DE SANTIAGO DE CHILE
-# FACULTAD DE CIENCIAS
-# DEPARTAMENTO DE MATEMÁTICA Y CIENCIA DE LA COMPUTACIÓN
-# LICENCIATURA EN CIENCIA DE LA COMPUTACIÓN
-# Profesor(es): Nicolas Thériault
-# Segundo Semestre de 2019
-# Departamento de Matemática y Ciencia de la Computación { USACH { 2019
-# Programaciín Avanzada { Laboratorio 2
+UNIVERSIDAD DE SANTIAGO DE CHILE
+FACULTAD DE CIENCIAS
+DEPARTAMENTO DE MATEMÁTICA Y CIENCIA DE LA COMPUTACIÓN
+LICENCIATURA EN CIENCIA DE LA COMPUTACIÓN
+Profesor(es): Nicolas Thériault
+Segundo Semestre de 2019
+Departamento de Matemática y Ciencia de la Computación { USACH { 2019
+Programaciín Avanzada { Laboratorio 2
 
 # 1. Objetivos
 
