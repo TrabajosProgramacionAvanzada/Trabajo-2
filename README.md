@@ -23,7 +23,7 @@ programas) por grupo.
 
 # 2. Programación
 
-La programación debe ser en C (no en C++), utilizando a lo mas las libreras estándares
+La programación debe ser en C (no en C++), utilizando a lo más las librerías estándares
 siguientes:
 stdio.h
 stdlib.h
