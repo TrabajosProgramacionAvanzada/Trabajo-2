@@ -8,7 +8,7 @@ LICENCIATURA EN CIENCIA DE LA COMPUTACIÓN
 Profesor(es): Nicolas Thériault
 Segundo Semestre de 2019
 Departamento de Matemática y Ciencia de la Computación { USACH { 2019
-Programaciín Avanzada { Laboratorio 2
+Programaciín Avanzada { Laboratorio 2}}}
 
 # 1. Objetivos
 
@@ -87,7 +87,7 @@ Eficiencia [30 %]
 Los tiempos de calculo de ordenamiento comparados con una implementación básica" (que
 satisface lo solicitado).
 
-#Rangos de notas:
+# Rangos de notas:
 
  1: no ordena correctamente.
  1.1{2.4: más de 20 veces más lenta
