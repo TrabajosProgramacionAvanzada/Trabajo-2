@@ -4,90 +4,72 @@
 #include <time.h>
 
 
-struct NodeD{
+typedef struct NodeD{
   double valor;
   unsigned long long int repeticiones;
   struct NodeD* siguiente;
   struct NodeD* anterior;
-};
+} node;
 
-struct NodeD initNodeD(struct NodeD nodo){
-  nodo.valor = 0.0;
-  nodo.repeticiones = 0;
+node* initNodeD(node *head){
+  node* nodo = malloc(sizeof(node));
+  nodo->valor = 0.0;
+  nodo->repeticiones = 0;
   nodo->siguiente = NULL;
   nodo->anterior = NULL;
-}
-
-struct ListD{
-  struct NodeD* head;
-  struct NodeD* mid;
-  unsigned long long int cantidad;
-};
-
-struct ListD initListD(struct ListD lista){
-  lista.cantidad = 0;
-  lista->head = initNodeD(lista->head);
-  lista->mid = head;
-}
-
-
-struct NodeD* instertND(struct  NodeD* head, double n){
-  struct NodeD* new = initNodeD(new);
-  struct NodeD* aux = head;
-  if(head == NULL){
-    new.valor = n;
-    return new;
-  }
-  else{
-    if(n < head.valor){
-      new.valor = n;
-      new->siguiente = head;
-      head->anterior = new;
-    }else{
-      if(head.valor == n){
-	head.repeticiones++;
-	return head;
-      }
-      while(aux->siguiente != NULL && n > aux->siguiente.valor){
-	aux = aux->siguiente;
-      }
-      if(aux->siguiente.valor == n){
-	aux->siguiente.repeticiones++;
-      }else{
-	new->siguiente = aux->siguiente;
-	aux->siguiente->anterior = new;
-	aux->siguiente = new;
-	new->anterior = aux;
-      }
-    }
-  }
+  head = nodo;
   return head;
 }
 
-struct ListD* instertL(struct  ListD* lista, double n){
-  lista->head = initNodeD(lista->head, n);
+typedef struct ListD{
+  node* head;
+  unsigned long long int cantidad;
+}list;
+
+list initListD(list lista){
+  lista.cantidad = 0;
+  lista.head = NULL;
+}
+
+
+node* instertND(node* head, double n){
+  node* new = initNodeD(new);
+  new->valor = n;
+  node* aux = head;
+  new->siguiente = head;
+  return new;
+}
+
+list instertL(list lista, double n){
+  lista.head = instertND(lista.head, n);
   lista.cantidad++;
-  if(lista.cantidad%2 == 0 && lista.cantidad >= 4){
-    lista->mid = list->mid->siguiente;
-  }
   return lista;
 }
 
 int main(){	
 	double longitud;
 	double aux = 0;
+	node* auxN = initNodeD(auxN);
+	node* aux2 = NULL;
 	FILE* documento;
 	int i=1;
 	documento=fopen("ArchivoA.tex", "r");
-	fscanf(documento, "%le", &longitud);
-	while(longitud != aux){
-	  printf("%le - %d\n", longitud, i);
+	while(1 == fscanf(documento, "%le", &longitud)){
+	  //printf("%le - %d\n", longitud, i);
+	  auxN = instertND(auxN, longitud);
+	  //printf("%le - %d\n", auxN->valor, i);
 	  i++;
-	  aux = longitud;
 	  fscanf(documento, "%le", &longitud);
 	}
-
 	fclose(documento);
-
+	aux2 = auxN;
+	printf("le");
+	printf("%le", aux2->valor);
+	i = 1;
+	while(aux2 != NULL){
+	  printf("%le - %d\n", aux2->valor, i);
+	  aux2 = aux2->siguiente;
+	  i++;
+	}
 	return 0;
 }
