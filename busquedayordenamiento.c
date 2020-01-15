@@ -41,7 +41,7 @@ int main(){
 	  i++;
 	}
 	fclose(documento);
-	scanf("%d", i);
+	scanf("%d", &i);
 	i = 0;
 	aux = head;
 	while(aux != NULL){
