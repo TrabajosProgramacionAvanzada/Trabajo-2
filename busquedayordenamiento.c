@@ -84,36 +84,36 @@ void QuickSort(node *head){
     return;
 }
 
+node* eliminarLista(node* head){
+  node* aux = head;
+  while(head){
+    head = head->siguiente;
+    free(aux);
+    aux = head;
+  }
+  return head;
+}
+
 int main(){	
+	double time1 = 0.0;
+	double time2 = 0.0;
 	double numero;
 	char c = '\0';
 	node* head = initNodeD(head);
 	node* aux = NULL;
 	FILE* documento;
-	int i=1;
-	numero = clock();
+	time1 = clock();
 	documento=fopen("ArchivoC.tex", "r");
 	while(1 == fscanf(documento, "%le", &numero)){
 	  head = instertND(head, numero);
 	}
 	fclose(documento);
-	numero = (clock() - numero) / CLOCKS_PER_SEC;
-	printf("lectura de archivo: %le \n", numero);
-	numero = clock();
+	time1 = (clock() - time1) / CLOCKS_PER_SEC;
+	printf("lectura de archivo: %.4lf \n", time1);
+	time2 = clock();
 	QuickSort(head);
-	numero = (clock() - numero) / CLOCKS_PER_SEC;
-	printf("quick sort: %le \n", numero);
-	scanf("%c", &c);
-	aux = head;
-	i = 1;
-	while(aux != NULL){
-	  printf("%le - %d\n", aux->valor, i);
-	  aux = aux->siguiente;
-	  free(head);
-	  if(aux)
-	    aux->anterior = NULL;
-	  head = aux;
-	  i++;
-	}
+	time2 = (clock() - time2) / CLOCKS_PER_SEC;
+	printf("quick sort: %.4lf \n", time2);
+	head = eliminarLista(head);
 	return 0;
 }
