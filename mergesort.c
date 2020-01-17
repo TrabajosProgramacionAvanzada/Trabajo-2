@@ -108,10 +108,6 @@ node* merge_sorted(node* A, node* B){
 				free(A);
 			}
 		}	
-	}else if (A->siguiente && !B->siguiente){
-		//penúltimo caso A
-	}else if (B->siguiente && !A->siguiente){
-		//penúltimo caso B
 	}else if (A){
 		return A;
 	}else{
@@ -124,11 +120,16 @@ node* mergeSort(node* head){
 	node* mitad = NULL;
 	if(head && head->siguiente){
 		mitad = split(head);
-		return merge_sorted(head, mitad);
+		if(mitad && mitad->siguiente)
+			return merge_sorted(head, mitad);
+		else if(head->siguiente){
+			return merge_sorted(mergeSort(head),mitad);
+		}else{
+			return merge_sorted(head, mitad);
+		}
 	}else{
 		return head;
 	}
-	
 }
 
 int main() {
@@ -144,7 +145,74 @@ int main() {
 	head = instertND(head, 8.8734847436e+9);
 	head = instertND(head, 0.673847436e-4);
 	head = instertND(head, 20.673847436e+10);
+	head = instertND(head, 1.673847436e+24);
+	head = instertND(head, 1.673847436e-24);
+	head = instertND(head, 1.673848436e+4);
+	head = instertND(head, 1.673892436e+2);
+	head = instertND(head, 5.673847436e+0);
+	head = instertND(head, 1.673736436e+6);
+	head = instertND(head, 11.673847436e+5);
+	head = instertND(head, 10.673847436e-1);
+	head = instertND(head, 8.8734847436e+9);
+	head = instertND(head, 0.673847436e-4);
+	head = instertND(head, 20.673847436e+10);
+	head = instertND(head, 1.673847436e+24);
+	head = instertND(head, 1.673847436e-24);
+	head = instertND(head, 1.673848436e+4);
+	head = instertND(head, 1.673892436e+2);
+	head = instertND(head, 5.673847436e+0);
+	head = instertND(head, 1.673736436e+6);
+	head = instertND(head, 11.673847436e+5);
+	head = instertND(head, 10.673847436e-1);
+	head = instertND(head, 8.8734847436e+9);
+	head = instertND(head, 0.673847436e-4);
+	head = instertND(head, 20.673847436e+10);
+	head = instertND(head, 1.673847436e+24);
+	head = instertND(head, 1.673847436e-24);
+	head = instertND(head, 1.673848436e+4);
+	head = instertND(head, 1.673892436e+2);
+	head = instertND(head, 5.673847436e+0);
+	head = instertND(head, 1.673736436e+6);
+	head = instertND(head, 11.673847436e+5);
+	head = instertND(head, 10.673847436e-1);
+	head = instertND(head, 8.8734847436e+9);
+	head = instertND(head, 0.673847436e-4);
+	head = instertND(head, 20.673847436e+10);
+	head = instertND(head, 1.673847436e+24);
+	head = instertND(head, 1.673847436e-24);
+	head = instertND(head, 1.673848436e+4);
+	head = instertND(head, 1.673892436e+2);
+	head = instertND(head, 5.673847436e+0);
+	head = instertND(head, 1.673736436e+6);
+	head = instertND(head, 11.673847436e+5);
+	head = instertND(head, 10.673847436e-1);
+	head = instertND(head, 8.8734847436e+9);
+	head = instertND(head, 0.673847436e-4);
+	head = instertND(head, 20.673847436e+10);
+	head = instertND(head, 1.673847436e+24);
+	head = instertND(head, 1.673847436e-24);
+	head = instertND(head, 1.673848436e+4);
+	head = instertND(head, 1.673892436e+2);
+	head = instertND(head, 5.673847436e+0);
+	head = instertND(head, 1.673736436e+6);
+	head = instertND(head, 11.673847436e+5);
+	head = instertND(head, 10.673847436e-1);
+	head = instertND(head, 8.8734847436e+9);
+	head = instertND(head, 0.673847436e-4);
+	head = instertND(head, 20.673847436e+10);
+	head = instertND(head, 1.673847436e+24);
+	head = instertND(head, 1.673847436e-24);
+	head = instertND(head, 1.673848436e+4);
+	head = instertND(head, 1.673892436e+2);
+	head = instertND(head, 5.673847436e+0);
+	head = instertND(head, 1.673736436e+6);
+	head = instertND(head, 11.673847436e+5);
+	head = instertND(head, 10.673847436e-1);
+	head = instertND(head, 8.8734847436e+9);
+	head = instertND(head, 0.673847436e-4);
+	head = instertND(head, 20.673847436e+10);
 	head = mergeSort(head);
+	display(head);
 	head = eliminarLista(head);
 	return 0;
 }
