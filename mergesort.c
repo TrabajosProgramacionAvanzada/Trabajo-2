@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-
+/*
 // Estructurua de dato del node Linked list
 
 typedef struct nodeP{
@@ -14,7 +14,7 @@ typedef struct nodeP{
 }node;
 
 //inicializacion de nodo
-/*
+
 node* initNodeP(node *head){
 	node* nodo = malloc(sizeof(node));
 	nodo->dato = 0.0;
@@ -22,7 +22,7 @@ node* initNodeP(node *head){
 	head = nodo;
 	return head;
 }
-*/
+
 
 //insertar elemento en principio de la lista
 
@@ -62,11 +62,11 @@ node* SortMerge(node* aux1, node* aux2){
 	if(aux1 -> dato <= aux2 -> dato){
 		resultado = aux1;
 		resultado ->next = SortMerge(aux1->next, aux2);
-		printf("ENTRE\n");
 
 	}
 	else{
 		resultado = aux2;
+		printf("ENTRE\n");
 		resultado ->next = SortMerge(aux1, aux2 -> next);
 	}
 	return resultado;
@@ -124,8 +124,41 @@ void MergeSort(node** head){
 
 	*head = SortMerge(aux1,aux2);
 }
+*/
 
+typedef struct _aList {
+    struct _aList* next;
+    struct _aList* prev; // Optional.
+       // some data
+} aList;
 
+node *merge_sort_list(node *list,int (*compare)(aList *one,aList *two))
+{
+  int listSize=1,numMerges,leftSize,rightSize;
+  aList *tail,*left,*right,*next;
+  if (!list || !list->next) return list;  // Trivial case
+  
+  do { // For each power of two<=list length
+    numMerges=0,left=list;tail=list=0; // Start at the start
+    
+    while (left) { // Do this list_len/listSize times:
+      numMerges++,right=left,leftSize=0,rightSize=listSize;
+      // Cut list into two halves (but don't overrun)
+      while (right && leftSize<listSize) leftSize++,right=right->next;
+      // Run through the lists appending onto what we have so far.
+      while (leftSize>0 || (rightSize>0 && right)) {
+	// Left empty, take right OR Right empty, take left, OR compare.
+	if (!leftSize)                  {next=right;right=right->next;rightSize--;}
+	else if (!rightSize || !right)  {next=left;left=left->next;leftSize--;}
+	else if (compare(left,right)<0) {next=left;left=left->next;leftSize--;}
+	else                            {next=right;right=right->next;rightSize--;}
+	// Update pointers to keep track of where we are:
+	if (tail) tail->next=next;  else list=next;
+	// Sort prev pointer
+	next->prev=tail; // Optional.
+	tail=next;          
+      }
+      // Right is now AFTER the list we just sorted, so start the next sort
 // funcion principal 
 int main(){
 
@@ -133,7 +166,7 @@ int main(){
 	double time2 = 0.0;
 	double largo;
 	double numero;
-	node* head = NULL;
+	_aList* head = NULL;
 	FILE* documento;
 	largo=0;
 
@@ -150,4 +183,4 @@ int main(){
 
 
 	return 0;
-}
+	}

@@ -469,7 +469,6 @@ nodeAVL *deletenodeAVL(nodeAVL *root, double valor) {
     root->derecha = derechaRotate(root->derecha);
     return izquerdaRotate(root);
   }
-
   return root;
 }
 
@@ -489,16 +488,21 @@ int main(){
 	char c = '\0';
 	nodeAVL* root = NULL;
 	node* aux = NULL;
+	node* aux1 = NULL;
 	FILE* documento;
 	time1 = clock();
-	documento=fopen("ArchivoC.tex", "r");
-	while(fscanf(documento, "%le", &numero)){
-	  root = insert(root, numero);
+	documento=fopen("ArchivoA.tex", "r");
+	while(1 == fscanf(documento, "%le", &numero)){
+	  aux = instertND(aux, numero);
+	  //printf("%le\n", numero);
 	}
 	fclose(documento);
 	time1 = (clock() - time1) / CLOCKS_PER_SEC;
 	printf("lectura de archivo: %.4lf \n", time1);
-	//printf("merge sort: %.4lf \n", time2);
+	time1 = clock();
+	aux1 = mergeSort(aux);
+	time1 = (clock() - time1) / CLOCKS_PER_SEC;
+	printf("merge sort: %.4lf \n", time1);
 	//scanf("%c", c);
 	//inOrder(root);
 	//root = eliminarLista(root);
