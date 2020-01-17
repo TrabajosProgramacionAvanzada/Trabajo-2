@@ -53,6 +53,10 @@ node* eliminarLista(node* head){
   return head;
 }
 
+int max_comp(double a, double b){
+  return (a < b) ? -1 : (a == b) ? 0 : 1; 
+}
+
 node *split(node *head){ 
   node *rapido = head,*lento = head; //rápido avanza dos por cada uno que avanza el lento
   node *aux = NULL;//auxiliar
@@ -66,3 +70,81 @@ node *split(node *head){
   return aux; 
 } 
 
+node* merge_sorted(node* A, node* B){
+	node* aux1 = NULL;
+	node* aux2 = NULL;
+	if(A->siguiente && B->siguiente){
+		if(max_comp(A->valor, B->valor) < 0){
+			aux1 = A->siguiente;
+			A->siguiente = NULL;
+			aux1->anterior = NULL;
+			aux1 = merge_sorted(aux1, B);
+			aux1->anterior = A;
+			A->siguiente = aux1;
+			aux1 = A;
+		}else if(max_comp(A->valor, B->valor) > 0){
+			aux1 = B->siguiente;
+			B->siguiente = NULL;
+			aux1->anterior = NULL;
+			aux1 = merge_sorted(A, aux1);
+			aux1->anterior = B;
+			B->siguiente = aux1;
+			aux1 = B;
+		}else{
+			aux2 = B->siguiente;
+			aux2->anterior = NULL;
+			free(B);
+			aux1 = A->siguiente;
+			A->siguiente = NULL;
+			aux1->anterior = NULL;
+			aux1 = merge_sorted(aux1, aux2);
+			if(max_comp(aux1->valor, A->valor) != 0){
+				aux1->anterior = A;
+				A->siguiente = aux1;
+				A->repeticiones++;
+				aux1 = A;
+			}else{
+				aux1->repeticiones++;
+				free(A);
+			}
+		}	
+	}else if (A->siguiente && !B->siguiente){
+		//penúltimo caso A
+	}else if (B->siguiente && !A->siguiente){
+		//penúltimo caso B
+	}else if (A){
+		return A;
+	}else{
+		return B;
+	}
+	return aux1;
+}
+
+node* mergeSort(node* head){
+	node* mitad = NULL;
+	if(head && head->siguiente){
+		mitad = split(head);
+		return merge_sorted(head, mitad);
+	}else{
+		return head;
+	}
+	
+}
+
+int main() {
+	node* head = NULL;
+	head = instertND(head, 1.673847436e+24);
+	head = instertND(head, 1.673847436e-24);
+	head = instertND(head, 1.673848436e+4);
+	head = instertND(head, 1.673892436e+2);
+	head = instertND(head, 5.673847436e+0);
+	head = instertND(head, 1.673736436e+6);
+	head = instertND(head, 11.673847436e+5);
+	head = instertND(head, 10.673847436e-1);
+	head = instertND(head, 8.8734847436e+9);
+	head = instertND(head, 0.673847436e-4);
+	head = instertND(head, 20.673847436e+10);
+	head = mergeSort(head);
+	head = eliminarLista(head);
+	return 0;
+}
