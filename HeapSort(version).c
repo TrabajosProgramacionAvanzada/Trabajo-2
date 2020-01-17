@@ -12,16 +12,16 @@ typedef struct nodeHeap {
 } nodeHeap;
 
 //Estructura de la lista enlazada
-typedef struct NodeD{
+typedef struct NodeDH{
   double valor;
   unsigned long long int repeticiones;
-  struct NodeD* siguiente;
-  struct NodeD* anterior;
-} node;
+  struct NodeDH* siguiente;
+  struct NodeDH* anterior;
+} nodeDH;
 
 //Función que inicializa un nodo vacío
-node* initNodeD(node *head){
-  node* nodo = malloc(sizeof(node));
+nodeDH* initNodeDH(nodeDH *head){
+  nodeDH* nodo = malloc(sizeof(nodeDH));
   nodo->valor = 0.0;
   nodo->repeticiones = 0;
   nodo->siguiente = NULL;
@@ -31,22 +31,22 @@ node* initNodeD(node *head){
 }
 
 //Función que insera un valor al inicio una lista
-node* instertND(node* head, double n){
+nodeDH* instertNDH(nodeDH* head, double n){
   if(head && head->valor == n){
     head->repeticiones++;
     return head;
   }
-  node* new = initNodeD(new);
+  nodeDH* new = initNodeDH(new);
   new->valor = n;
-  node* aux = head;
+  nodeDH* aux = head;
   new->siguiente = head;
   if(head != NULL)
     head->anterior = new;
   return new;
 }
 
-node* eliminarLista(node* head){
-  node* aux = head;
+nodeDH* eliminarListaDH(nodeDH* head){
+  nodeDH* aux = head;
   while(head){
     head = head->siguiente;
     free(aux);
@@ -55,8 +55,8 @@ node* eliminarLista(node* head){
   return head;
 }
 
-// Función que retorna la altura de un árbol
-int altura(nodeHeap *N) {
+// Función que retorna la alturaHeap de un árbol
+int alturaHeap(nodeHeap *N) {
   if (N == NULL)
     return 0;
   return N->altura;
@@ -78,34 +78,34 @@ int max_comp(double a, double b){
 
 // Función que inicializa un nuevo nodo AVL
 nodeHeap *newnodeHeap(double valor) {
-  nodeHeap *node = (nodeHeap *)malloc(sizeof(nodeHeap));
-  node->valor = valor;
-  node->izquerda = NULL;
-  node->derecha = NULL;
-  node->altura = 1;
-  node->repeticiones = 0;
-  return (node);
+  nodeHeap *nodo = (nodeHeap *)malloc(sizeof(nodeHeap));
+  nodo->valor = valor;
+  nodo->izquerda = NULL;
+  nodo->derecha = NULL;
+  nodo->altura = 1;
+  nodo->repeticiones = 0;
+  return (nodo);
 }
 
 
 // Función que retorna el balance de la raíz
-int getBalance(nodeHeap *N) {
+int getBalanceHeap(nodeHeap *N) {
   if (N == NULL)
     return 0;
-  return altura(N->izquerda) - altura(N->derecha);
+  return alturaHeap(N->izquerda) - alturaHeap(N->derecha);
 }
 
-nodeHeap *insertHeap(nodeHeap *node, double valor) {
+nodeHeap *insertHeap(nodeHeap *nodo, double valor) {
   int balance = 0;
-  balance = getBalance(node);//Pide el balance para resolver según tres casos
-  if (node == NULL)//Si no hay nodo
+  balance = getBalanceHeap(nodo);//Pide el balance para resolver según tres casos
+  if (nodo == NULL)//Si no hay nodo
     return (newnodeHeap(valor));//Se inserta el nuevo nodo
   if (balance <= 0)//Si el valor es menor que el de la raíz
-    node->izquerda = insertHeap(node->izquerda, valor);//Se continúa insertando recursivamente hacia la izquerda
+    nodo->izquerda = insertHeap(nodo->izquerda, valor);//Se continúa insertando recursivamente hacia la izquerda
   else  //de lo contrario, si es mayor
-    node->derecha = insertHeap(node->derecha, valor);//Se actúa reciprocamente hacia la derecha
-  node->altura = 1 + max(altura(node->izquerda), altura(node->derecha));//Se actualiza la altira después de la insersión
-  return node;
+    nodo->derecha = insertHeap(nodo->derecha, valor);//Se actúa reciprocamente hacia la derecha
+  nodo->altura = 1 + max(alturaHeap(nodo->izquerda), alturaHeap(nodo->derecha));//Se actualiza la altira después de la insersión
+  return nodo;
 }
 
 nodeHeap* to_heap_1(nodeHeap* root){
@@ -138,11 +138,11 @@ nodeHeap* to_heap(nodeHeap* root){
 
 
 // Función que elimina un valor de un AVL
-nodeHeap *deletenodeHeap(nodeHeap *root, node* head[1]) {
+nodeHeap *deletenodeHeap(nodeHeap *root, nodeDH* head[1]) {
    int balance = 0;
-  balance = getBalance(root);//Pide el balance para resolver según tres casos
+  balance = getBalanceHeap(root);//Pide el balance para resolver según tres casos
   if (root->izquerda == NULL && root->derecha == NULL){//Si no hay nodos siguientes
-    head[0] = instertND(head[0], root->valor);
+    head[0] = instertNDH(head[0], root->valor);
     free(root);
     return NULL;//Se inserta el nuevo nodo
   }else if (balance <= 0){//Si el valor es menor que el de la raíz
@@ -170,29 +170,29 @@ nodeHeap *deletenodeHeap(nodeHeap *root, node* head[1]) {
       root = to_heap_1(root);
     }
   }
-  root->altura = 1 + max(altura(root->izquerda), altura(root->derecha));//Se actualiza la altira después de la insersión
+  root->altura = 1 + max(alturaHeap(root->izquerda), alturaHeap(root->derecha));//Se actualiza la altira después de la insersión
   return root;
 }
 
 //Función que imprime en pantalla el árbol en inorder
-void inOrder(nodeHeap *root) {
+void inOrderHeap(nodeHeap *root) {
   if (root != NULL) {
-    inOrder(root->izquerda);
+    inOrderHeap(root->izquerda);
     printf("%le ", root->valor);
-    inOrder(root->derecha); 
+    inOrderHeap(root->derecha); 
   }
 }
 
 int main() {
   nodeHeap *root = NULL;
-  node* lista[1] = { NULL};
-  node* aux = NULL;
+  nodeDH* lista[1] = { NULL};
+  nodeDH* aux = NULL;
   double time1 = 0.0;
   double numero = 0.0;
   int i = 1;
   FILE* documento;
 	time1 = clock();
-	documento=fopen("ArchivoA.tex", "r");
+	documento=fopen("ArchivoC.tex", "r");
 	while(1 == fscanf(documento, "%le", &numero)){
 	  root = insertHeap(root, numero);
 	  //printf("%le\n", numero);
@@ -208,15 +208,7 @@ int main() {
   }
   time1 = (clock() - time1) / CLOCKS_PER_SEC;
 	printf("heap sort: %.4lf \n", time1);
-  printf("Pulse cualquier tecla para continuar...\n");
-  getchar();
   printf("\nlista ya ordenada: \n");
-  aux = lista[0];
-  while (aux){
-    printf("%le - %d\n", aux->valor, i);
-    aux = aux->siguiente;
-    i++;
-  }
-  lista[0] = eliminarLista(lista[0]);
+  lista[0] = eliminarListaDH(lista[0]);
   return 0;
 }

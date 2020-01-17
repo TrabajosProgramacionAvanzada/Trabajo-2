@@ -40,16 +40,7 @@ node* initNodeD(node *head){
   return head;
 }
 
-//Función que inicializa un heap vacío
-heap* initHeap(heap *root){
-  heap* nodo = malloc(sizeof(heap));
-  nodo->valor = 0.0;
-  nodo->repeticiones = 0;
-  nodo->izquerda = NULL;
-  nodo->derecha = NULL;
-  root = nodo;
-  return root;
-}
+
 
 //Función que insera un valor al inicio una lista
 node* instertND(node* head, double n){
@@ -62,22 +53,64 @@ node* instertND(node* head, double n){
   return new;
 }
 
-heap* insertHeap(heap* root, double n){
-  heap* new = initHeap(new);
-  if(root == NULL){
-    return new;
-  }else{
-    if(root->izquerda->bal - root->derecha->bal <= 0){
-      root->izquerda = insertHeap(root->izquerda, n);
-      if(root->derecha)
-	root->bal = root->derecha->bal - root->izquerda->bal + 1;
-    }else{
-      root->derecha = insertHeap(root->derecha, n);
-      if(root->izquerda)
-	root->bal = root->derecha->bal - root->izquerda->bal + 1;
-    }
+// Estructura para el nodo del AVL
+typedef struct nodeHeap {
+  double valor;
+  struct nodeHeap *izquerda;
+  struct nodeHeap *derecha;
+  int altura;
+  long long int repeticiones;
+} nodeHeap;
+
+//Estructura de la lista enlazada
+typedef struct NodeDH{
+  double valor;
+  unsigned long long int repeticiones;
+  struct NodeDH* siguiente;
+  struct NodeDH* anterior;
+} nodeDH;
+
+//Función que inicializa un nodo vacío
+nodeDH* initNodeDH(nodeDH *head){
+  nodeDH* nodo = malloc(sizeof(nodeDH));
+  nodo->valor = 0.0;
+  nodo->repeticiones = 0;
+  nodo->siguiente = NULL;
+  nodo->anterior = NULL;
+  head = nodo;
+  return head;
+}
+
+//Función que insera un valor al inicio una lista
+nodeDH* instertNDH(nodeDH* head, double n){
+  if(head && head->valor == n){
+    head->repeticiones++;
+    return head;
   }
-  return root;
+  nodeDH* new = initNodeDH(new);
+  new->valor = n;
+  nodeDH* aux = head;
+  new->siguiente = head;
+  if(head != NULL)
+    head->anterior = new;
+  return new;
+}
+
+nodeDH* eliminarListaDH(nodeDH* head){
+  nodeDH* aux = head;
+  while(head){
+    head = head->siguiente;
+    free(aux);
+    aux = head;
+  }
+  return head;
+}
+
+// Función que retorna la alturaHeap de un árbol
+int alturaHeap(nodeHeap *N) {
+  if (N == NULL)
+    return 0;
+  return N->altura;
 }
 
 
@@ -88,77 +121,7 @@ void swap(double *A, double *B){
     *B = aux; 
 }
 
-heap* monticular(heap* root){
-  if (root->izquerda && root->derecha){
-    monticular(root->izquerda);
-    monticular(root->derecha);
-    if(root->izquerda->valor >= root->valor && root->derecha->valor <= root->izquerda->valor){
-      swap(&root->valor, &root->izquerda->valor);
-    }
-    if(root->derecha->valor >= root->valor && root->izquerda->valor <= root->derecha->valor){
-      swap(&root->valor, &root->derecha->valor);
-    }
-  }else{
-    if(root->izquerda){
-      if(root->izquerda->valor > root->valor)
-	swap(&root->izquerda->valor, &root->valor);
-      if(root->derecha->valor > root->valor)
-	swap(&root->derecha->valor, &root->valor);
-    }
-  }
-  return root;
-}
 
-heap* eliminarNHeap(heap* root, node** head){
-  if(root->izquerda == NULL || root->derecha == NULL){
-    if(root->izquerda == NULL && root->derecha == NULL){
-      *head = instertND(*head, root->valor);
-      free(root);
-    }
-    if(root->izquerda){
-      swap(&root->valor, &root->izquerda->valor);
-      root->izquerda = eliminarNHeap(root->izquerda, head);
-    }
-    if(root->derecha){
-      swap(&root->valor, &root->derecha->valor);
-      root->derecha = eliminarNHeap(root->derecha, head);
-    }
-    return root;
-  }else{
-    if(root->derecha->bal - root->izquerda->bal <= 0){
-      swap(&root->derecha->valor, &root->valor);
-      root->derecha=eliminarNHeap(root->derecha, head);
-      root->izquerda=monticular(root->izquerda);
-    }else{
-      swap(&root->izquerda->valor, &root->valor);
-      root->izquerda=eliminarNHeap(root->izquerda, head);
-      root->derecha=monticular(root->derecha);
-    }
-    if(root->izquerda==NULL && root->derecha!=NULL){
-      if(root->valor<root->derecha->valor){
-	swap(&root->derecha->valor, &root->valor);
-      }
-    }else if(root->izquerda!=NULL && root->derecha==NULL){
-      if(root->valor<root->izquerda->valor){
-	swap(&root->izquerda->valor, &root->valor);
-      }
-    }else{
-      if(root->valor <= root->derecha->valor && root->izquerda->valor <= root->derecha->valor){
-	swap(&root->derecha->valor, &root->valor);
-      }else if(root->valor <= root->izquerda->valor && root->derecha->valor <= root->izquerda->valor){
-	swap(&root->izquerda->valor, &root->valor);
-      }
-    }
-  }
-  return root;
-}
-
-heap* ordenarHeap(heap* root,node** head){
-  while(root){
-    root = eliminarNHeap(root, head);
-  }
-  return NULL;
-}
 
 void display(node* head){
   int i = 1;
@@ -225,93 +188,6 @@ node* eliminarLista(node* head){
   return head;
 }
 
-//Función que mezcla dos listas ordenadas
-node *merge(node *A, node *B){ 
-  node* head = NULL;
-  node* aux = NULL;
-  node* aux2 = NULL;
-  while(A && B){//Mientras existan ambas listas
-    if(head){//Si existe la cabeza de la lista ya ordenada
-      if(A->valor <= B->valor){//Si el valor de A es menor o igual al de B
-	if(A->valor == B->valor){//En específico, si es igual
-	  aux2 = B;//Se copia B para ser eliminado
-	  B = B->siguiente;//Se avanza en B
-	  free(aux2);//Se elimina
-	  aux2 = A->siguiente;//Se copia el siguiente de A
-	  A->siguiente = NULL;//Se corta de la lista
-	  aux->siguiente = A;//Se conecta con el final de la lista
-	  A->anterior = aux;//Se conecta el final de la lista con A
-	  A->repeticiones++;//Se incrementa el contador de repeticiones
-	  aux = A;//se avanza en la lista ordenada
-	  A = aux2;//Se avanza en A
-	}else{//De lo contrario, es menor
-	  aux2 = A->siguiente;//copia siguiente
-	  A->siguiente = NULL;//corta A
-	  if (aux2)//Si existe el siguiente
-	    aux2->anterior = NULL;//Se corta la lista de A
-	  aux->siguiente = A;//enlaza con A
-	  A->anterior = aux;//enlaza con lista
-	  aux = A;//Se avanza en lista ordenada
-	  A = aux2;//Se avanza en A
-	}
-      }else{//Análogamente en B se pasa a la lista ordenada y avanza
-	aux2 = B->siguiente;
-	B->siguiente = NULL;
-	if (aux2)//Si existe el siguiente
-	  aux2->anterior = NULL;//Se corta la lista de B
-	aux->siguiente = B;
-	B->anterior = aux;
-	aux = B;
-	B = aux2;
-      }
-    }else{//De lo contrario es la primera iteración
-      if(A->valor <= B->valor){//Se realiza todo casi igual
-	if(A->valor == B->valor){
-	  aux2 = B;
-	  B = B->siguiente;
-	  free(aux2);
-	  head = aux = A;//A excepción de que se iguala la cabeza y el auxiliar para recorrer la nueva lista ordenada a A
-	  aux2 = A->siguiente;
-	  A->siguiente = NULL;
-	  if (aux2)
-	    aux2->anterior = NULL;
-	  A->repeticiones++;
-	  A = aux2;
-	}else{
-	  head = aux = A;
-	  aux2 = A->siguiente;
-	  if (aux2)
-	    aux2->anterior = NULL;
-	  A = aux2;
-	}
-      }else{
-	head = aux = B;
-	aux2 = B->siguiente;
-	B->siguiente = NULL;
-	if (aux2)
-	  aux2->anterior = NULL;
-	B = B->siguiente;
-      }
-    }
-  }
-  if(A){
-    if(head){
-      aux->siguiente = A;
-      A->anterior = aux;
-    }else{
-      return A;
-    }
-  }else if(B){
-    if(head){
-      aux->siguiente = B;
-      B->anterior = aux;
-    }else{
-      return B;
-    }
-  }
-  return head;
-}
-
 node *split(node *head){ 
   node *rapido = head,*lento = head; //rápido avanza dos por cada uno que avanza el lento
   node *aux = NULL;//auxiliar
@@ -326,20 +202,6 @@ node *split(node *head){
 } 
 
 
-
-//Función que ordena por mezcla una lista
-node *mergeSort(node *head){ 
-  node* segundo = NULL; 
-  if (!head || !head->siguiente){ 
-    return head; 
-  }else{
-    segundo = split(head); 
-    head = mergeSort(head);// Recurrencia para las mitades izquerda y derecha
-    segundo = mergeSort(segundo); 
-  }
-  return merge(head,segundo); // Mezcla las dos mitades ya ordenadas
-} 
-
 // Función que retorna la altura de un árbol
 int altura(nodeAVL *N) {
   if (N == NULL)
@@ -349,6 +211,110 @@ int altura(nodeAVL *N) {
 
 // Función que retorna el mayor entre dos double
 double max(double a, double b) { return (a > b) ? a : b; }
+
+
+int max_comp(double a, double b){
+  return (a < b) ? -1 : (a == b) ? 0 : 1; 
+}
+
+// Función que inicializa un nuevo nodo AVL
+nodeHeap *newnodeHeap(double valor) {
+  nodeHeap *nodo = (nodeHeap *)malloc(sizeof(nodeHeap));
+  nodo->valor = valor;
+  nodo->izquerda = NULL;
+  nodo->derecha = NULL;
+  nodo->altura = 1;
+  nodo->repeticiones = 0;
+  return (nodo);
+}
+
+
+// Función que retorna el balance de la raíz
+int getBalanceHeap(nodeHeap *N) {
+  if (N == NULL)
+    return 0;
+  return alturaHeap(N->izquerda) - alturaHeap(N->derecha);
+}
+
+nodeHeap *insertHeap(nodeHeap *nodo, double valor) {
+  int balance = 0;
+  balance = getBalanceHeap(nodo);//Pide el balance para resolver según tres casos
+  if (nodo == NULL)//Si no hay nodo
+    return (newnodeHeap(valor));//Se inserta el nuevo nodo
+  if (balance <= 0)//Si el valor es menor que el de la raíz
+    nodo->izquerda = insertHeap(nodo->izquerda, valor);//Se continúa insertando recursivamente hacia la izquerda
+  else  //de lo contrario, si es mayor
+    nodo->derecha = insertHeap(nodo->derecha, valor);//Se actúa reciprocamente hacia la derecha
+  nodo->altura = 1 + max(alturaHeap(nodo->izquerda), alturaHeap(nodo->derecha));//Se actualiza la altira después de la insersión
+  return nodo;
+}
+
+nodeHeap* to_heap_1(nodeHeap* root){
+  if(root->izquerda && root->derecha){
+    if(max_comp(root->valor, root->derecha->valor) < 0 && max_comp(root->valor, root->izquerda->valor) < 0){
+      if(max_comp(root->izquerda->valor, root->derecha->valor) <= 0)
+        swap(&root->valor, &root->derecha->valor);
+      else
+        swap(&root->valor, &root->izquerda->valor);
+    }else if(max_comp(root->valor, root->derecha->valor) < 0)
+      swap(&root->valor, &root->derecha->valor);
+    else 
+      swap(&root->valor, &root->izquerda->valor);
+  }else if (root->izquerda){
+    if (max_comp(root->valor, root->izquerda->valor) < 0)
+      swap(&root->valor, &root->izquerda->valor);
+  }else if (root->derecha){
+    if(max_comp(root->valor, root->derecha->valor) < 0)
+      swap(&root->valor, &root->derecha->valor);
+  }
+  return root;
+}
+
+nodeHeap* to_heap(nodeHeap* root){
+  if(!root)
+    return root;
+  else 
+    return to_heap_1(root);
+}
+
+
+// Función que elimina un valor de un AVL
+nodeHeap *deletenodeHeap(nodeHeap *root, nodeDH* head[1]) {
+   int balance = 0;
+  balance = getBalanceHeap(root);//Pide el balance para resolver según tres casos
+  if (root->izquerda == NULL && root->derecha == NULL){//Si no hay nodos siguientes
+    head[0] = instertNDH(head[0], root->valor);
+    free(root);
+    return NULL;//Se inserta el nuevo nodo
+  }else if (balance <= 0){//Si el valor es menor que el de la raíz
+    if(root->derecha){
+      swap(&root->valor, &root->derecha->valor);
+      root->derecha = deletenodeHeap(root->derecha, head);//Se continúa insertando recursivamente hacia la izquerda
+      root->izquerda = to_heap(root->izquerda);
+      root = to_heap_1(root);
+    }else{
+      swap(&root->valor, &root->izquerda->valor);
+      root->izquerda = deletenodeHeap(root->izquerda, head);//Se continúa insertando recursivamente hacia la izquerda
+      root->derecha = to_heap(root->derecha);
+      root = to_heap_1(root);
+    }
+  }else{  //de lo contrario, si es mayorif(root->derecha){
+    if(root->derecha){
+      swap(&root->valor, &root->derecha->valor);
+      root->derecha = deletenodeHeap(root->derecha, head);//Se continúa insertando recursivamente hacia la izquerda
+      root->izquerda = to_heap(root->izquerda);
+      root = to_heap_1(root);
+    }else{
+      swap(&root->valor, &root->izquerda->valor);
+      root->izquerda = deletenodeHeap(root->izquerda, head);//Se continúa insertando recursivamente hacia la izquerda
+      root->derecha = to_heap(root->derecha);
+      root = to_heap_1(root);
+    }
+  }
+  root->altura = 1 + max(alturaHeap(root->izquerda), alturaHeap(root->derecha));//Se actualiza la altira después de la insersión
+  return root;
+}
+
 
 // Función que inicializa un nuevo nodo AVL
 nodeAVL *newnodeAVL(double valor) {
@@ -486,21 +452,20 @@ int main(){
 	double time2 = 0.0;
 	double numero;
 	char c = '\0';
-	nodeAVL* root = NULL;
-	node* aux = NULL;
+	nodeHeap* root = NULL;
+	nodeDH* aux = NULL;
 	node* aux1 = NULL;
 	FILE* documento;
 	time1 = clock();
 	documento=fopen("ArchivoA.tex", "r");
 	while(1 == fscanf(documento, "%le", &numero)){
-	  aux = instertND(aux, numero);
-	  //printf("%le\n", numero);
+	  root = insertHeap(root, numero);
 	}
 	fclose(documento);
 	time1 = (clock() - time1) / CLOCKS_PER_SEC;
 	printf("lectura de archivo: %.4lf \n", time1);
 	time1 = clock();
-	aux1 = mergeSort(aux);
+	//aux1 = mergeSort(aux);
 	time1 = (clock() - time1) / CLOCKS_PER_SEC;
 	printf("merge sort: %.4lf \n", time1);
 	//scanf("%c", c);
