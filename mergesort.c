@@ -117,7 +117,7 @@ node* merge_sorted(node* A, node* B){
 }
 
 node* mergeSort(node* head){
-	node* mitad = NULL;
+	node* mitad = NULL;//caso base es el penúltimo
 	if(head && head->siguiente){
 		mitad = split(head);
 		if(mitad && mitad->siguiente)
