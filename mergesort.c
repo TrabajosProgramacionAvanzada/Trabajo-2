@@ -6,18 +6,16 @@
 //Estructura de la lista enlazada
 typedef struct NodeD{
   double valor;
-  unsigned long long int repeticiones;
+  long long int repeticion;
   struct NodeD* siguiente;
-  struct NodeD* anterior;
 } node;
 
 //Función que inicializa un nodo vacío
 node* initNodeD(node *head){
   node* nodo = malloc(sizeof(node));
   nodo->valor = 0.0;
-  nodo->repeticiones = 0;
+  nodo->repeticion = 0;
   nodo->siguiente = NULL;
-  nodo->anterior = NULL;
   head = nodo;
   return head;
 }
@@ -28,8 +26,6 @@ node* instertND(node* head, double n){
   new->valor = n;
   node* aux = head;
   new->siguiente = head;
-  if(head != NULL)
-    head->anterior = new;
   return new;
 }
 
@@ -66,152 +62,141 @@ node *split(node *head){
   } //A este punto el lento debe ir en la mitad mientras el otro al fin de la lista
   aux = lento->siguiente; //inicio de la segunda mitas
   lento->siguiente = NULL; //corte desde primera
-  aux->anterior = NULL; //corte desde segunda
   return aux; 
 } 
 
-node* merge_sorted(node* A, node* B){
-	node* aux1 = NULL;
-	node* aux2 = NULL;
-	if(A->siguiente && B->siguiente){
-		if(max_comp(A->valor, B->valor) < 0){
-			aux1 = A->siguiente;
-			A->siguiente = NULL;
-			aux1->anterior = NULL;
-			aux1 = merge_sorted(aux1, B);
-			aux1->anterior = A;
-			A->siguiente = aux1;
-			aux1 = A;
-		}else if(max_comp(A->valor, B->valor) > 0){
-			aux1 = B->siguiente;
-			B->siguiente = NULL;
-			aux1->anterior = NULL;
-			aux1 = merge_sorted(A, aux1);
-			aux1->anterior = B;
-			B->siguiente = aux1;
-			aux1 = B;
-		}else{
-			aux2 = B->siguiente;
-			aux2->anterior = NULL;
-			free(B);
-			aux1 = A->siguiente;
-			A->siguiente = NULL;
-			aux1->anterior = NULL;
-			aux1 = merge_sorted(aux1, aux2);
-			if(max_comp(aux1->valor, A->valor) != 0){
-				aux1->anterior = A;
-				A->siguiente = aux1;
-				A->repeticiones++;
-				aux1 = A;
+node* recorrerLista(node* head){
+	node* aux = head;
+	while(head && aux->siguiente){
+		aux = aux->siguiente;
+	}
+	return aux;
+}
+
+
+node* merge_sorted(node* A, node* B, node* head){
+	node* auxA = A;
+	node* auxB = B;
+	node* aux = NULL;
+	node* elim = NULL;
+	aux = recorrerLista(head);
+	if(A && B){//Si hay ambas listas para ordenar
+		while(auxB && auxA){
+			if(auxA->valor < auxB->valor){
+				if(aux){
+					aux->siguiente = auxA;
+					auxA = auxA->siguiente;
+					aux = aux->siguiente;
+					aux->siguiente = NULL;
+				}else{
+					aux = head = auxA;
+					auxA = auxA->siguiente;
+					aux->siguiente = NULL;
+				}
+			}else if(auxA->valor < auxB->valor){
+				if(aux){
+					aux->siguiente = auxB;
+					auxB = auxB->siguiente;
+					aux = aux->siguiente;
+					aux->siguiente = NULL;
+				}else{
+					aux = auxB;
+					auxB = auxB->siguiente;
+					aux->siguiente = NULL;
+				}
+			}else if(aux && auxA->valor == auxB->valor && auxB->valor != aux->valor){
+				aux->siguiente = auxA;
+				auxA = auxA->siguiente;
+				aux = aux->siguiente;
+				aux->siguiente = NULL;
+				aux->repeticion++;
+				elim = auxB;
+				auxB = auxB->siguiente;
+				free(elim);
+			}else if(aux){
+				aux->repeticion = aux->repeticion + 2;
+				elim = auxA;
+				auxA = auxA->siguiente;
+				free(elim);
+				elim = auxB;
+				auxB = auxB->siguiente;
+				free(elim);
 			}else{
-				aux1->repeticiones++;
-				free(A);
+				aux = auxA;
+				auxA = auxA->siguiente;
+				elim = auxB;
+				auxB = auxB->siguiente;
+				free(elim);
+				aux->siguiente = NULL;
+				aux->repeticion++;
 			}
-		}	
-	}else if (A){
-		return A;
-	}else{
-		return B;
-	}
-	return aux1;
-}
-
-node* mergeSort(node* head){
-	node* mitad = NULL;//caso base es el penúltimo
-	if(head && head->siguiente){
-		mitad = split(head);
-		if(mitad && mitad->siguiente)
-			return merge_sorted(head, mitad);
-		else if(head->siguiente){
-			return merge_sorted(mergeSort(head),mitad);
-		}else{
-			return merge_sorted(head, mitad);
 		}
-	}else{
-		return head;
+		if(auxA){
+			aux->siguiente = auxA;
+			auxA = auxA->siguiente;
+			aux = aux->siguiente;
+		}else if(auxB){
+			aux->siguiente = auxB;
+			auxB = auxB->siguiente;
+			aux = aux->siguiente;
+		}
 	}
+	if(A){
+		if(aux)
+			aux->siguiente = auxA;
+		else
+			head = auxA;
+	}else if (B){
+		if(aux)
+			aux->siguiente = auxB;
+		else
+			head = auxB;
+	}
+	return head;
 }
 
-int main() {
+
+
+node* mergeSort(node* head, node *sorted){
+	node* mitad = split(head);//caso base es el penúltimo
+	node* aux1 = NULL;
+	if(head){
+		
+	}
+	return sorted;
+}
+
+
+int main(){	
+	double time1 = 0.0;
+	double time2 = 0.0;
+	double numero;
+	char c = '\0';
 	node* head = NULL;
-	head = instertND(head, 1.673847436e+24);
-	head = instertND(head, 1.673847436e-24);
-	head = instertND(head, 1.673848436e+4);
-	head = instertND(head, 1.673892436e+2);
-	head = instertND(head, 5.673847436e+0);
-	head = instertND(head, 1.673736436e+6);
-	head = instertND(head, 11.673847436e+5);
-	head = instertND(head, 10.673847436e-1);
-	head = instertND(head, 8.8734847436e+9);
-	head = instertND(head, 0.673847436e-4);
-	head = instertND(head, 20.673847436e+10);
-	head = instertND(head, 1.673847436e+24);
-	head = instertND(head, 1.673847436e-24);
-	head = instertND(head, 1.673848436e+4);
-	head = instertND(head, 1.673892436e+2);
-	head = instertND(head, 5.673847436e+0);
-	head = instertND(head, 1.673736436e+6);
-	head = instertND(head, 11.673847436e+5);
-	head = instertND(head, 10.673847436e-1);
-	head = instertND(head, 8.8734847436e+9);
-	head = instertND(head, 0.673847436e-4);
-	head = instertND(head, 20.673847436e+10);
-	head = instertND(head, 1.673847436e+24);
-	head = instertND(head, 1.673847436e-24);
-	head = instertND(head, 1.673848436e+4);
-	head = instertND(head, 1.673892436e+2);
-	head = instertND(head, 5.673847436e+0);
-	head = instertND(head, 1.673736436e+6);
-	head = instertND(head, 11.673847436e+5);
-	head = instertND(head, 10.673847436e-1);
-	head = instertND(head, 8.8734847436e+9);
-	head = instertND(head, 0.673847436e-4);
-	head = instertND(head, 20.673847436e+10);
-	head = instertND(head, 1.673847436e+24);
-	head = instertND(head, 1.673847436e-24);
-	head = instertND(head, 1.673848436e+4);
-	head = instertND(head, 1.673892436e+2);
-	head = instertND(head, 5.673847436e+0);
-	head = instertND(head, 1.673736436e+6);
-	head = instertND(head, 11.673847436e+5);
-	head = instertND(head, 10.673847436e-1);
-	head = instertND(head, 8.8734847436e+9);
-	head = instertND(head, 0.673847436e-4);
-	head = instertND(head, 20.673847436e+10);
-	head = instertND(head, 1.673847436e+24);
-	head = instertND(head, 1.673847436e-24);
-	head = instertND(head, 1.673848436e+4);
-	head = instertND(head, 1.673892436e+2);
-	head = instertND(head, 5.673847436e+0);
-	head = instertND(head, 1.673736436e+6);
-	head = instertND(head, 11.673847436e+5);
-	head = instertND(head, 10.673847436e-1);
-	head = instertND(head, 8.8734847436e+9);
-	head = instertND(head, 0.673847436e-4);
-	head = instertND(head, 20.673847436e+10);
-	head = instertND(head, 1.673847436e+24);
-	head = instertND(head, 1.673847436e-24);
-	head = instertND(head, 1.673848436e+4);
-	head = instertND(head, 1.673892436e+2);
-	head = instertND(head, 5.673847436e+0);
-	head = instertND(head, 1.673736436e+6);
-	head = instertND(head, 11.673847436e+5);
-	head = instertND(head, 10.673847436e-1);
-	head = instertND(head, 8.8734847436e+9);
-	head = instertND(head, 0.673847436e-4);
-	head = instertND(head, 20.673847436e+10);
-	head = instertND(head, 1.673847436e+24);
-	head = instertND(head, 1.673847436e-24);
-	head = instertND(head, 1.673848436e+4);
-	head = instertND(head, 1.673892436e+2);
-	head = instertND(head, 5.673847436e+0);
-	head = instertND(head, 1.673736436e+6);
-	head = instertND(head, 11.673847436e+5);
-	head = instertND(head, 10.673847436e-1);
-	head = instertND(head, 8.8734847436e+9);
-	head = instertND(head, 0.673847436e-4);
-	head = instertND(head, 20.673847436e+10);
-	head = mergeSort(head);
+	node* result = NULL;
+	//FILE* documento;
+	//time1 = clock();
+	// documento=fopen("ArchivoA.tex", "r");
+	// while(1 == fscanf(documento, "%le", &numero)){
+	//   head = instertND(head, numero);
+	// }
+	// fclose(documento);
+	//time1 = (clock() - time1) / CLOCKS_PER_SEC;
+	//printf("lectura de archivo: %.4lf \n", time1);
+	head = instertND(head, 1);
+	head = instertND(head, 10);
+	head = instertND(head, 5);
+	head = instertND(head, 8);
+	head = instertND(head, 2);
+	head = instertND(head, 4);
+	head = instertND(head, 6);
+	head = instertND(head, 3);
+	head = instertND(head, 9);
+	time1 = clock();
+	result = mergeSort(head, result);
+	time1 = (clock() - time1) / CLOCKS_PER_SEC;
+	printf("merge sort: %.4lf \n", time1);
+	getchar();
 	display(head);
 	head = eliminarLista(head);
 	return 0;
