@@ -3,16 +3,16 @@
 #include <stdlib.h>
 #include <time.h>
 
-//Estructura de la lista enlazada
-typedef struct NodeD{
+//Estructura de la lista enlazada para mergesort
+typedef struct NodeM{
   double valor;
   long long int repeticion;
-  struct NodeD* siguiente;
-} node;
+  struct NodeM* siguiente;
+} nodeM;
 
 //Función que inicializa un nodo vacío
-node* initNodeD(node *head){
-  node* nodo = malloc(sizeof(node));
+nodeM* initNodeM(nodeM *head){
+  nodeM* nodo = malloc(sizeof(nodeM));
   nodo->valor = 0.0;
   nodo->repeticion = 0;
   nodo->siguiente = NULL;
@@ -21,15 +21,15 @@ node* initNodeD(node *head){
 }
 
 //Función que insera un valor al inicio una lista
-node* instertND(node* head, double n){
-  node* new = initNodeD(new);
+nodeM* instertM(nodeM* head, double n){
+  nodeM* new = initNodeM(new);
   new->valor = n;
-  node* aux = head;
+  nodeM* aux = head;
   new->siguiente = head;
   return new;
 }
 
-void display(node* head){
+void displayM(nodeM* head){
   int i = 1;
   while (head != NULL) { 
     printf("%le - %d \n", head->valor, i);
@@ -39,8 +39,8 @@ void display(node* head){
   return;
 } 
 
-node* eliminarLista(node* head){
-  node* aux = head;
+nodeM* eliminarListaM(nodeM* head){
+  nodeM* aux = head;
   while(head){
     head = head->siguiente;
     free(aux);
@@ -53,9 +53,9 @@ int max_comp(double a, double b){
   return (a < b) ? -1 : (a == b) ? 0 : 1; 
 }
 
-node *split(node *head){ 
-	node *rapido = head,*lento = head; //rápido avanza dos por cada uno que avanza el lento
-	node *aux = NULL;//auxiliar
+nodeM *splitM(nodeM *head){ 
+	nodeM *rapido = head,*lento = head; //rápido avanza dos por cada uno que avanza el lento
+	nodeM *aux = NULL;//auxiliar
 	if(head){
 		while (rapido->siguiente && rapido->siguiente->siguiente){//Si existe el siguiente del rápido y el siguiente a éste 
 		rapido = rapido->siguiente->siguiente;//Avanza dos con el rápido 
@@ -67,8 +67,8 @@ node *split(node *head){
   	return aux; 
 } 
 
-node* recorrerLista(node* head){
-	node* aux = head;
+nodeM* recorrerLista(nodeM* head){
+	nodeM* aux = head;
 	while(head && aux->siguiente){
 		aux = aux->siguiente;
 	}
@@ -76,12 +76,12 @@ node* recorrerLista(node* head){
 }
 
 
-node* merge_sorted(node* A, node* B){
-	node* auxA = A;
-	node* auxB = B;
-	node* head = NULL;
-	node* aux = NULL;
-	node* elim = NULL;
+nodeM* merge_sorted(nodeM* A, nodeM* B){
+	nodeM* auxA = A;
+	nodeM* auxB = B;
+	nodeM* head = NULL;
+	nodeM* aux = NULL;
+	nodeM* elim = NULL;
 	if(A && B){//Si hay ambas listas para ordenar
 		while(auxA && auxB){
 			//printf("\nwhile\n");
@@ -155,11 +155,11 @@ node* merge_sorted(node* A, node* B){
 
 
 
-node* mergeSort(node* head){
-	node* mitad = split(head);;//caso base es el penúltimo
-	node* aux1 = NULL;
-	node* aux2 = NULL;
-	node *sorted = NULL;
+nodeM* mergeSort(nodeM* head){
+	nodeM* mitad = splitM(head);;//caso base es el penúltimo
+	nodeM* aux1 = NULL;
+	nodeM* aux2 = NULL;
+	nodeM *sorted = NULL;
 	if(head && mitad){
 		aux1 = mergeSort(mitad);
 		aux2 = mergeSort(head);
@@ -178,14 +178,14 @@ int main(){
 	double time2 = 0.0;
 	double numero;
 	char c = '\0';
-	node* head = NULL;
-	node* result = NULL;
-	node* aux = NULL;
+	nodeM* head = NULL;
+	nodeM* result = NULL;
+	nodeM* aux = NULL;
 	FILE* documento;
 	time1 = clock();
 	documento=fopen("ArchivoA.tex", "r");
 	while(1 == fscanf(documento, "%le", &numero)){
-	  head = instertND(head, numero);
+	  head = instertM(head, numero);
 	}
 	fclose(documento);
 	time1 = (clock() - time1) / CLOCKS_PER_SEC;
@@ -195,7 +195,7 @@ int main(){
 	time1 = (clock() - time1) / CLOCKS_PER_SEC;
 	printf("merge sort: %.4lf \n", time1);
 	// getchar();
-	// display(result);
-	head = eliminarLista(head);
+	// displayM(result);
+	head = eliminarListaM(head);
 	return 0;
 }
