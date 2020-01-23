@@ -192,7 +192,7 @@ int main() {
   int i = 1;
   FILE* documento;
 	time1 = clock();
-	documento=fopen("ArchivoC.tex", "r");
+	documento=fopen("ArchivoB.tex", "r");
 	while(1 == fscanf(documento, "%le", &numero)){
 	  root = insertHeap(root, numero);
 	  //printf("%le\n", numero);
@@ -209,6 +209,7 @@ int main() {
   time1 = (clock() - time1) / CLOCKS_PER_SEC;
 	printf("heap sort: %.4lf \n", time1);
   printf("\nlista ya ordenada: \n");
+  getchar();
   lista[0] = eliminarListaDH(lista[0]);
   return 0;
 }

@@ -91,16 +91,15 @@ nodeAVL *insert(nodeAVL *nodeAVL, double valor) {
 }
 
 //Función que retorna el valor mínimo del árbol
-nodeAVL *minValuenodeAVL(nodeAVL *nodeAVL) {
-  nodeAVL *current = nodeAVL;
+nodeAVL *minValuenodeAVL(nodeAVL *node) {
+  nodeAVL *current = node;
   while (current->izquerda != NULL) //Hasta que no haya un nodo menor a la raíz
     current = current->izquerda;//Se avanza
   return current;
 }
 
 // Función que elimina un valor de un AVL
-nodeAVL *deletenodeAVL(nodeAVL *root, double valo) {
-  nodeAVL *temp = NULL;
+nodeAVL *deletenodeAVL(nodeAVL *root, double valor) {
   nodeAVL *temp = NULL;
   int balance = 0;
   if (root == NULL)//Si la cabeza está vacía (caso báse)
@@ -155,22 +154,22 @@ void inOrder(nodeAVL *root) {
 
 int main() {
   nodeAVL *root = NULL;
-  int i = 0;
-  root = insert(root, 9);
-  root = insert(root, 5);
-  root = insert(root, 10);
-  root = insert(root, 0);
-  root = insert(root, 6);
-  root = insert(root, 11);
-  root = insert(root, -1);
-  root = insert(root, 1);
-  root = insert(root, 2);
-  printf("Inorder del AVL:\n");
-  inOrder(root);
-  scanf("%d", &i);
-  root = deletenodeAVL(root, i);
-  printf("\nPreorder traversal after deletion of %d \n", i);
-  inOrder(root);
-  scanf("%d", &i);
+  double time1 = 0.0;
+  double time2 = 0.0;
+  double numero;
+  FILE* documento;
+  time1 = clock();
+  documento=fopen("ArchivoC.tex", "r");
+  while(1 == fscanf(documento, "%le", &numero)){
+    root = insert(root, numero);
+	}
+  fclose(documento);
+  time1 = (clock() - time1) / CLOCKS_PER_SEC;
+  printf("lectura de archivo: %.4lf \n", time1);
+  //time2 = clock();
+  //head = mergeSort(head);
+  //time2 = (clock() - time2) / CLOCKS_PER_SEC;
+  //printf("merge sort: %.4lf \n", time1);
+  getchar();
   return 0;
 }

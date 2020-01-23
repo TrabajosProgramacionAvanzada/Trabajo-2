@@ -226,8 +226,8 @@ typedef struct NodeDH{
 } nodeDH;
 
 //Funci贸n que inicializa un nodo vac铆o
-node* initNodeD(node *head){
-  node* nodo = malloc(sizeof(node));
+nodeDH* initNodeD(nodeDH *head){
+  nodeDH* nodo = malloc(sizeof(nodeDH));
   nodo->valor = 0.0;
   nodo->repeticiones = 0;
   nodo->siguiente = NULL;
@@ -237,10 +237,10 @@ node* initNodeD(node *head){
 }
 
 //Funci贸n que inserta un valor al inicio una lista como una pila
-node* instertND(node* head, double n){
-  node* new = initNodeD(new);
+nodeDH* instertND(nodeDH* head, double n){
+  nodeDH* new = initNodeD(new);
   new->valor = n;
-  node* aux = head;
+  nodeDH* aux = head;
   new->siguiente = head;
   if(head != NULL)
     head->anterior = new;
@@ -460,17 +460,16 @@ nodeAVL *insert(nodeAVL *nodeAVL, double valor) {
 }
 
 //Funci贸n que retorna el valor m铆nimo del 谩rbol
-nodeAVL *minValuenodeAVL(nodeAVL *nodeAVL) {
-  nodeAVL *current = nodeAVL;
+nodeAVL *minValuenodeAVL(nodeAVL *root) {
+  nodeAVL* current = root;
   while (current->izquerda != NULL) //Hasta que no haya un nodo menor a la ra铆z
     current = current->izquerda;//Se avanza
   return current;
 }
 
 // Funci贸n que elimina un valor de un AVL
-nodeAVL *deletenodeAVL(nodeAVL *root, double valo) {
-  nodeAVL *temp = NULL;
-  nodeAVL *temp = NULL;
+nodeAVL *deletenodeAVL(nodeAVL *root, double valor) {
+  nodeAVL *temp = NULL;;
   int balance = 0;
   if (root == NULL)//Si la cabeza est谩 vac铆a (caso b谩se)
     return root;
@@ -538,10 +537,10 @@ Para la lista enlazada: Valor, Repeticion y direcciones (siguiente y anterior)
 typedef struct NodeHeap{
   double valor; //Clave del nodo
   unsigned long long int repeticiones; //Veces que se repite la clave
-  int bal; //Balance
+  int altura; //Balance
   struct NodeHeap *izquerda;
   struct NodeHeap *derecha;
-} heap;
+} nodeHeap;
 
 
 // Funci贸n que inicializa un nuevo nodo AVL
@@ -559,7 +558,12 @@ nodeHeap *newnodeHeap(double valor) {
 int getBalanceHeap(nodeHeap *N) {
   if (N == NULL)
     return 0;
-  return alturaHeap(N->izquerda) - alturaHeap(N->derecha);
+  return getBalanceHeap(N->izquerda) - getBalanceHeap(N->derecha);
+}
+
+//Funci创on que indica cu醠 n鷐ero es mayor
+int max_comp(double a, double b){
+  return (a < b) ? -1 : (a == b) ? 0 : 1; 
 }
 
 //Insertar valores ordenados en el arbol
@@ -573,7 +577,7 @@ nodeHeap *insertHeap(nodeHeap *nodo, double valor) {
     nodo->izquerda = insertHeap(nodo->izquerda, valor);//Se contin煤a insertando recursivamente hacia la izquerda
   else  //de lo contrario, si es mayor
     nodo->derecha = insertHeap(nodo->derecha, valor);//Se act煤a reciprocamente hacia la derecha
-  nodo->altura = 1 + max(alturaHeap(nodo->izquerda), alturaHeap(nodo->derecha));//Se actualiza la altira despu茅s de la insersi贸n
+  nodo->altura = 1 + max(getBalanceHeap(nodo->izquerda), getBalanceHeap(nodo->derecha));//Se actualiza la altira despu茅s de la insersi贸n
   return nodo;
 }
 
@@ -642,7 +646,7 @@ nodeHeap *deletenodeHeap(nodeHeap *root, nodeDH* head[1]) {
       root = to_heap_1(root);
     }
   }
-  root->altura = 1 + max(alturaHeap(root->izquerda), alturaHeap(root->derecha));//Se actualiza la altira despu茅s de la insersi贸n
+  root->altura = 1 + max(getBalanceHeap(root->izquerda), getBalanceHeap(root->derecha));//Se actualiza la altira despu茅s de la insersi贸n
   return root;
 }
 
@@ -653,21 +657,21 @@ nodeHeap *deletenodeHeap(nodeHeap *root, nodeDH* head[1]) {
 
 Trabajo de operaciones que obtendremos de las listas
 
-*/
+
 
 //Funciones para AVL de maximos, minimos y medidas de estadistica
 
 //valor maximo
-nodeAVL *maxvalorAVL(nodeAVL *nodeAVL){
+nodeAVL *maxvalorAVL(nodeAVL *node){
 
-    if(nodeAVL==NULL){
-        return (nodeAVL-> valor);
+    if(node==NULL){
+        return (node);
 
     }
 
-    double res = nodeAVL -> valor;
-    double izqres = maxvalorAVL(nodeAVL -> izquerda);
-    double derres = maxvalorAVL(nodeAVL -> derecha);
+    double res = node -> valor;
+    double izqres = maxvalorAVL(node -> izquerda);
+    double derres = maxvalorAVL(node -> derecha);
     if(izqres > res){
         res = izqres;
     }
@@ -706,25 +710,39 @@ void cuartiles(nodeAVL *nodeAVL, double cuartilesdato[4]){
 
 
 // Funciones para listas de maximos, minimos y medidas de estadisitica
-
+*/
 
 
 int main(){
 
   double time1 = 0.0;
-	double time2 = 0.0;
-	double numero;
+  double time2 = 0.0;
+  double numero;
 
-	char c = '\0';
-
-	nodeM* head1 = NULL;
-  nodeDH* head2 = NULL;
-  nodeAVL* nodeAVL = NULL;
-  NodeHeap = NULL;
+  char c = '\0';
+  // nodeHeap head3 = NULL;
+  // nodeDH head2 = NULL;
+  nodeM* head1 = NULL;
+  nodeAVL* node = NULL;
+  nodeHeap* head4 = NULL;
   int opcion;
 
 	FILE* documento;
-
+		time1 = clock();
+	documento=fopen("ArchivoA.tex", "r");
+	while(1 == fscanf(documento, "%le", &numero)){
+	  head1 = instertM(head1, numero);
+	  printf("%le \n", numero);
+	}
+	fclose(documento);
+	time1 = (clock() - time1) / CLOCKS_PER_SEC;
+	printf("lectura de archivo: %.4lf \n", time1);
+	time2 = clock();
+	head1 = mergeSort(head1);
+	time2 = (clock() - time2) / CLOCKS_PER_SEC;
+	printf("merge sort: %.4lf \n", time1);
+	getchar();
+	/*
   //Menu dentro del intmain
 
 
@@ -761,7 +779,7 @@ int main(){
     }
 
   }while(opcion!=5);
-
+*/
 
 	
   return 0;
