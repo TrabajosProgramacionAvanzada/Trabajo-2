@@ -293,7 +293,7 @@ void swap(double *A, double *B){
 
 //funcion que muestra en pantalla mediante un ciclo
 
-void display(node* head){
+void display(nodeDH* head){
   int i = 1;
   while (head != NULL) { 
     printf("%le - %d \n", head->valor, i);
@@ -304,7 +304,7 @@ void display(node* head){
 } 
 
 //Función que devuelve el último valor de una lista enlazada
-node *lastND(node *head) 
+nodeDH *lastND(nodeDH *head) 
 { 
     while (head && head->siguiente) 
         head = head->siguiente; 
@@ -313,10 +313,10 @@ node *lastND(node *head)
  
 
 /* Considerando el último elemento como pivote, se posicionan los elementos menores de un lado del pivote y los mayores al otro */
-node* partition(node *l, node *h){ 
+nodeDH* partition(nodeDH *l, nodeDH *h){ 
   double x = h->valor; //selecciona a h como pivote 
-  node *i = l->anterior; //Centinela
-  node *j = NULL;
+  nodeDH *i = l->anterior; //Centinela
+  nodeDH *j = NULL;
   for (j = l; j != h; j = j->siguiente){ //recorremos la lista con j 
     if (j->valor <= x){ //si el valor actual es menor o igual al pivote
       i = (i == NULL) ? l : i->siguiente;//avanza 
@@ -333,9 +333,9 @@ node* partition(node *l, node *h){
 } 
 
 //Paso inductivo de Quick Sort
-void quickSortI(node* lista, node *pivote){ 
+void quickSortI(nodeDH* lista, nodeDH *pivote){ 
   if (pivote != NULL && lista != pivote && lista != pivote->siguiente){//Si existe el pivote y es diferente al pivote y es diferente al que le sigue al pivote
-    node *p = partition(lista, pivote); //Se realiza la partición en torno al pivote
+    nodeDH *p = partition(lista, pivote); //Se realiza la partición en torno al pivote
     quickSortI(lista, p->anterior);//Se ordena parcialmente un lado 
     quickSortI(p->siguiente, pivote); //ahora el otro
   }
@@ -344,28 +344,15 @@ void quickSortI(node* lista, node *pivote){
 
 //Funcion QuickSort generazlizado con el paso inductivo
 
-void QuickSort(node *head){ 
-    node *aux = lastND(head);//encuentra el último nodo 
+void QuickSort(nodeDH *head){ 
+    nodeDH *aux = lastND(head);//encuentra el último nodo 
     quickSortI(head, aux); //llama a la función recurrsiva de Quick Sort
     return;
 }
 
-//Eliminar lista y Dividirla en dos
-
-
-node* eliminarLista(node* head){
-  node* aux = head;
-  while(head){
-    head = head->siguiente;
-    free(aux);
-    aux = head;
-  }
-  return head;
-}
-
-node *split(node *head){ 
-  node *rapido = head,*lento = head; //rápido avanza dos por cada uno que avanza el lento
-  node *aux = NULL;//auxiliar
+nodeDH *split(nodeDH *head){ 
+  nodeDH *rapido = head,*lento = head; //rápido avanza dos por cada uno que avanza el lento
+  nodeDH *aux = NULL;//auxiliar
   while (rapido->siguiente && rapido->siguiente->siguiente){//Si existe el siguiente del rápido y el siguiente a éste 
     rapido = rapido->siguiente->siguiente;//Avanza dos con el rápido 
     lento = lento->siguiente; //Avanza uno con el lento
@@ -557,50 +544,6 @@ typedef struct NodeHeap{
 } heap;
 
 
-//Estructura de la lista enlazada
-typedef struct NodeDH{
-  double valor;
-  unsigned long long int repeticiones;
-  struct NodeDH* siguiente;
-  struct NodeDH* anterior;
-} nodeDH;
-
-//Función que inicializa un nodo vacío
-nodeDH* initNodeDH(nodeDH *head){
-  nodeDH* nodo = malloc(sizeof(nodeDH));
-  nodo->valor = 0.0;
-  nodo->repeticiones = 0;
-  nodo->siguiente = NULL;
-  nodo->anterior = NULL;
-  head = nodo;
-  return head;
-}
-
-//Función que inserta un valor al inicio una lista
-nodeDH* instertNDH(nodeDH* head, double n){
-  if(head && head->valor == n){
-    head->repeticiones++;
-    return head;
-  }
-  nodeDH* new = initNodeDH(new);
-  new->valor = n;
-  nodeDH* aux = head;
-  new->siguiente = head;
-  if(head != NULL)
-    head->anterior = new;
-  return new;
-}
-
-//Funcion que elimina lista den que se van guardando los valores del arbol
-nodeDH* eliminarListaDH(nodeDH* head){
-  nodeDH* aux = head;
-  while(head){
-    head = head->siguiente;
-    free(aux);
-    aux = head;
-  }
-  return head;
-}
 // Función que inicializa un nuevo nodo AVL
 nodeHeap *newnodeHeap(double valor) {
   nodeHeap *nodo = (nodeHeap *)malloc(sizeof(nodeHeap));
