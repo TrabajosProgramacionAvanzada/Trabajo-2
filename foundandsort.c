@@ -516,7 +516,7 @@ nodeAVL *deletenodeAVL(nodeAVL *root, double valor) {
 void inOrder(nodeAVL *root) {
   if (root != NULL) {
     inOrder(root->izquerda);
-    printf("%d ", root->valor);
+    printf("%le ", root->valor);
     inOrder(root->derecha); 
   }
 }
@@ -660,16 +660,16 @@ Trabajo de operaciones que obtendremos de las listas
 //Funciones para AVL de maximos, minimos y medidas de estadistica
 
 //valor maximo
-nodeAVL *maxvalorAVL(nodeAVL *nodeAVL){
+double maxvalorAVL(nodeAVL *node){
 
-    if(nodeAVL==NULL){
-        return (nodeAVL-> valor);
+    if(node==NULL){
+        return 0;
 
     }
 
-    double res = nodeAVL -> valor;
-    double izqres = maxvalorAVL(nodeAVL -> izquerda);
-    double derres = maxvalorAVL(nodeAVL -> derecha);
+    double res = node -> valor;
+    double izqres = maxvalorAVL(node -> izquerda);
+    double derres = maxvalorAVL(node -> derecha);
     if(izqres > res){
         res = izqres;
     }
@@ -682,10 +682,10 @@ nodeAVL *maxvalorAVL(nodeAVL *nodeAVL){
 
 //Valor minimo 
 
-void minvalorAVL(nodeAVL* nodeAVL){
+void minvalorAVL(nodeAVL* node){
 
     nodeAVL *aux=NULL;
-    aux=minValuenodeAVL(nodeAVL);
+    aux=minValuenodeAVL(node);
     printf(" EL VALOR MINIMO: %le\n",aux->valor);
 
 }
@@ -700,76 +700,75 @@ void cuartiles(nodeAVL* nodeAVL){
    
 }
 
-nodeAVL* repeticion(nodeAVL* nodeAVL){
+nodeAVL* repeticion(nodeAVL* node){
 
   nodeAVL *aux1;
   nodeAVL *aux2;
-  if(nodeAVL){
-    if(nodeAVL->izquerda)
-      aux1 = repeticion(nodeAVL->izquerda);  
-    if(nodeAVL ->derecha){
-      aux2 = repeticion(nodeAVL->derecha);
-      if(aux1 && aux1->repeticiones < aux2->repeticioes){
+  if(node){
+    if(node->izquerda)
+      aux1 = repeticion(node->izquerda);  
+    if(node ->derecha){
+      aux2 = repeticion(node->derecha);
+      if(aux1 && aux1->repeticiones < aux2->repeticiones){
         aux1=aux2;
       }
-      else if(aux1!){
+      else if(aux1 != NULL){
         aux1=aux2;
       }
 
     }
-    if(aux1->repeticiones > nodeAVL->repeticiones){
-      return nodeAVL;
+    if(aux1->repeticiones > node->repeticiones){
+      return node;
     }
-    else { return aux1; }
   }
-
+  return aux1;
 }
 
 //repeticion de lista DH, lista doblemente enlazada
 
-nodeDH* repeticionDH(nodeDH *head2){
+nodeDH* repeticionDH(nodeDH *head1){
+  nodeDH* max = head1;
+  nodeDH* aux1 = head1;
+  while(aux1){
+    if(aux1 && aux1->repeticiones < max->repeticiones){
 
-  nodeDH* aux1;
-  if(head2){
-    if(aux1 && aux1->repeticiones < head2->repeticiones){
-
-      aux1=head2;
+      max=aux1;
 
     }
-    repeticionDH(head2->siguiente);
+    aux1 = aux1->siguiente;
   }
-  return aux1;
+  return max;
 }
 
-//repeticion de lista M, no es soblemente enlazada
+//repeticion de lista M, no es doblemente enlazada
 
-nodeDH* repeticionM(nodeM *head1){
+nodeM* repeticionM(nodeM *head1){
+  nodeM* max = head1;
+  nodeM* aux1 = head1;
+  while(aux1){
+    if(aux1 && aux1->repeticion < max->repeticion){
 
-  nodeM* aux1;
-  if(head2){
-    if(aux1 && aux1->repeticion < head1->repeticion){
-
-      aux1=head2;
+      max=aux1;
 
     }
-    repeticionDH(head1->siguiente);
+    aux1 = aux1->siguiente;
   }
-  return aux1;
+  return max;
 }
 
 // Funciones Listas
 
-void estadisticasDD(NodeDH* head){
-  NodeDH* aux1 = head;
-  NodeDH* aux2 = head;
-  NodeDH* aux3 = head;
-  NodeDH* aux4 = head;
-  while (aux4 && aux4->siguiente && au4->siguiente->siguiente && au4->siguiente->siguiente->siguiente && au4->siguiente->siguiente->siguiente->siguiente)
+void estadisticasDD(nodeDH* head){
+  nodeDH* aux1 = head;
+  nodeDH* aux2 = head;
+  nodeDH* aux3 = head;
+  nodeDH* aux4 = head;
+  while (aux4 && aux4->siguiente && aux4->siguiente->siguiente && aux4->siguiente->siguiente->siguiente && aux4->siguiente->siguiente->siguiente->siguiente)
   {
     aux1 = aux1->siguiente;
     aux2 = aux2->siguiente->siguiente;
-    aux3 = aux3->siguente->siguiente->siguiente;
-    aux4 = aux4->siguente->siguiente->siguiente->siguiente;
+    aux3 = aux3->siguiente->siguiente->siguiente;
+    aux4 = aux4->siguiente->siguiente->siguiente->siguiente;
   }
   printf("El primer cuartil es: %le\n", aux1->valor);
   printf("La media y segundo cuartil es: %le\n", aux2->valor);
@@ -777,17 +776,17 @@ void estadisticasDD(NodeDH* head){
   return;
 }
 
-void mediaMerge(NodeM* head){
-  NodeM* aux = splitM(head);
+void mediaMerge(nodeM* head){
+  nodeM* aux = splitM(head);
   printf("La media es: %le\n", aux->valor);
 }
 
-void cuartilesMerge(NodeM* head){
-  NodeM* aux1 = splitM(head);
-  NodeM* aux2 = splitM(aux1);
-  NodeM* aux = aux1->siguiente;
+void cuartilesMerge(nodeM* head){
+  nodeM* aux1 = splitM(head);
+  nodeM* aux2 = splitM(aux1);
+  nodeM* aux = aux1->siguiente;
   aux1->siguiente = NULL;
-  NodeM* aux3 = splitM(head);
+  nodeM* aux3 = splitM(head);
   aux1->siguiente = aux;
   printf("El primer cuartil es: %le", aux3->valor);
   printf("El segundo cuartil es: %le", aux1->valor);
@@ -808,12 +807,13 @@ int main(){
 	char c = '\0';
 
 	nodeM* head1 = NULL;
-  nodeDH* head2 = NULL;
+	nodeDH* head3 = NULL;
+  nodeDH* head2[1] = {NULL};
   nodeDH* auxDH = NULL;
   nodeAVL* auxAVL = NULL;
-  nodeAVL* nodeAVL = NULL;
+  nodeAVL* node = NULL;
   nodeM* aux = NULL;
-  nodeHeap* nodeheap = NULL;
+  nodeHeap* heap = NULL;
 
   int opcion;
 
@@ -823,7 +823,8 @@ int main(){
 
 
   do{
-    
+    printf("\nMenu:\n\n1- Ordenar con Merge Sort\n \n2- Ordenar con AVL\n \n 3- Ordenar con Quick Sort\n \n 4- Ordenar con Heap Sort\n \n5- Salir\n\n elija opcion: ");
+    scanf("%d", &opcion);
     switch (opcion)
     {
     case 1:
@@ -841,7 +842,7 @@ int main(){
       cuartilesMerge(head1);
       mediaMerge(head1); 
       aux = repeticionM(head1);
-      printf("La moda es: %le\n", aux->repeticion);
+      printf("La moda es: %le\n", aux->valor);
       aux = eliminarListaM(aux);
       head1 = eliminarListaM(head1);
       
@@ -850,15 +851,19 @@ int main(){
     case 2:
       printf(" ORDENAR UTILIZANDO AVL ");
       printf("\n");
+      time1 = clock();
       documento=fopen("ArchivoA.tex", "r");
 	    while(1 == fscanf(documento, "%le", &numero)){
-	        nodeAVL = insert(nodeAVL, numero);
+	        node = insert(node, numero);
       }
       fclose(documento);
-      auxAVL=repeticion(nodeAVL);
+      time1 = (time1 - clock())/ CLOCKS_PER_SEC;
+      printf("Tiempo insercion AVL: %lf\n", time1);
+      auxAVL=repeticion(node);
       printf("La moda es: %le\n", auxAVL->valor);
-
-      nodeAVL = deletenodeAVL(nodeAVL);
+      while(node){
+        node = deletenodeAVL(node, node->valor);
+      }
       
 
       break;
@@ -869,20 +874,17 @@ int main(){
       printf("\n");
       documento=fopen("ArchivoA.tex", "r");
 	    while(1 == fscanf(documento, "%le", &numero)){
-	        head2 = instertND(head2, numero);
+	        head3 = instertND(head3, numero);
       }
       fclose(documento);
       time1=clock();
-      QuickSort(head2);
+      QuickSort(head3);
       time1=(time1 - clock())/CLOCKS_PER_SEC;
-      estadisticasDD(head2);
-      auxDH = repeticionDH(head2);
-      printf("La moda es: %le\n", auxDH->repeticiones);
-      head2=eliminarListaDH(head2);
-      auxDH=eliminarListaDH(auxDH);
-      head2 = eliminarListaDH(head2);
-      head2 = eliminarListaDH(auxDH);
-
+      printf("Tiempo Quick Sort: %lf\n", time1);
+      estadisticasDD(head3);
+      auxDH = repeticionDH(head3);
+      printf("La moda es: %le\n", auxDH->valor);
+      head3=eliminarListaDH(head3);
       break;
     case 4:
       printf(" ORDENAR UTILIZANDO HEAPSORT ");
@@ -890,17 +892,19 @@ int main(){
 
       documento=fopen("ArchivoA.tex", "r");
 	    while(1 == fscanf(documento, "%le", &numero)){
-	        nodeHeap = insertHeap(nodeHeap, numero);
+	        heap = insertHeap(heap, numero);
       }
       fclose(documento);
       time2=clock();
-      head2[0] = deletenodeHeap(nodeHeap,head2[0]);
+      while(heap){
+        heap = deletenodeHeap(heap,&head2[0]);
+      }
       time2=(time2 - clock()/CLOCKS_PER_SEC);
-      printf("Tiempo merge sort: %lf/n", time1);
-      estadisticasDD(head2);
+      printf("Tiempo Heap sort: %lf/n", time1);
+      estadisticasDD(head2[0]);
       auxDH = repeticionDH(auxDH);
-      printf("La moda es: %le\n", auxDH->repeticion);
-      head2 = eliminarListaDH(head2);
+      printf("La moda es: %le\n", auxDH->valor);
+      head2[0] = eliminarListaDH(head2[0]);
       
       break;      
 
