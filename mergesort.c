@@ -183,7 +183,7 @@ int main(){
 	nodeM* aux = NULL;
 	FILE* documento;
 	time1 = clock();
-	documento=fopen("ArchivoB.tex", "r");
+	documento=fopen("ArchivoA.tex", "r");
 	while(1 == fscanf(documento, "%le", &numero)){
 	  head = instertM(head, numero);
 	}
