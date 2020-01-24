@@ -192,7 +192,7 @@ int main() {
   int i = 1;
   FILE* documento;
 	time1 = clock();
-	documento=fopen("ArchivoC.tex", "r");
+	documento=fopen("ArchivoB.tex", "r");
 	while(1 == fscanf(documento, "%le", &numero)){
 	  root = insertHeap(root, numero);
 	  //printf("%le\n", numero);

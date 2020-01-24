@@ -689,24 +689,24 @@ int main(){
 	double time2 = 0.0;
 	double numero;
 	char c = '\0';
-	nodeBTS* head = NULL;
+	node* head = NULL;
 	FILE* documento;
 	time1 = clock();
-	documento=fopen("ArchivoA.tex", "r");
-	while(1 == fscanf(documento, "%le", &numero)){
-	  head = insertBTS(head, numero);
+	documento=fopen("ArchivoB.tex", "r");
+	while(1 == fscanf(documento, "%f", &numero)){
+	  head = instertND(head, (double)numero);
 	}
 	fclose(documento);
 	time1 = (clock() - time1) / CLOCKS_PER_SEC;
 	printf("lectura de archivo: %.4lf \n", time1);
-	//time1 = clock();
-	//head = mergeSort(head);
-	//time1 = (clock() - time1) / CLOCKS_PER_SEC;
-	//printf("merge sort: %.4lf \n", time1);
-	getchar();
-	inorderBST(head);
-  while (head){
-   head = deleteNodeBTS(head, head->valor);
-  }
+	time1 = clock();
+	QuickSort(head);
+	time1 = (clock() - time1) / CLOCKS_PER_SEC;
+	printf("merge sort: %.4lf \n", time1);
+	//getchar();
+	//inorderBST(head);
+  // while (head){
+  //  head = deleteNodeBTS(head, head->valor);
+  // }
 	return 0;
 }
